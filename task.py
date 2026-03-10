@@ -17,5 +17,6 @@ class Task:
         ...
 
     # runs on the exceptions array, checks which exception is on and runs the retry function
-    def on_failure(self):
-        ...
+    def on_failure(self, required_exception:Exception):
+        if required_exception in self.exceptions_retry.values() and self.exceptions_retry[required_exception]:
+            self.retry(required_exception, True)
