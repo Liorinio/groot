@@ -14,7 +14,7 @@ class Dag:
         self.cache_type = cache_type
         self.exit_point_persistent = exit_point_persistent
 
-    def strat_trigger(self):
+    def start_trigger(self):
         ...
 
     def add_task(self, tasks_dict: dict[Task,list[Task]]):
