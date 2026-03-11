@@ -19,10 +19,6 @@ class Task(ABC):
     def action(self, user_input: Any|None):
         pass
 
-    # gets an exception and runs the action again
-    def retry(self, required_exception:Exception, is_on:bool):
-        ...
-
     """
     The on_failure() function runs on the exceptions array, checks if the exception is in the exception dictionary and if the check value of it is true.
     if both of the conditions are met, it runs the retry function
