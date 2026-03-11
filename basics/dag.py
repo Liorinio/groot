@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Tuple, Optional
-from task import Task
+from basics.task import Task
 from start_conditon import StartCondition
 from cache_type import CacheType
 
