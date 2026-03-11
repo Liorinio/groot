@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 from typing import Any
 
 
@@ -14,15 +15,16 @@ class Task(ABC):
         self.name = name
         self.exceptions_retry = exceptions_retry # a dict that contains exceptions and if the user wants to use them or not
 
-    # the function that the user overrides in order to implement his code
+    """
+    the function that the user overrides in order to implement his code
+    """
     @abstractmethod
     def action(self, user_input: Any|None):
         pass
 
     """
-    The on_failure() function runs on the exceptions array, checks if the exception is in the exception dictionary and if the check value of it is true.
-    if both of the conditions are met, it runs the retry function
+    The on_failure() function is a function that the user overrides to create a function that defines what will happen when all the retries have failed
     """
-    def on_failure(self, required_exception:Exception):
-        if required_exception in self.exceptions_retry.values() and self.exceptions_retry[required_exception]:
-            self.retry(required_exception, True)
+    @abstractmethod
+    def on_failure(self) -> Callable:
+        ...
