@@ -1,7 +1,8 @@
+from abc import ABC, abstractmethod
 from typing import Any
 
 
-class Task:
+class Task(ABC):
     def __init__(self, task_id:int, max_retries: int, name: str, exceptions_retry:dict[Exception,bool]):
         self.task_id = task_id
         self.max_retries = max_retries
@@ -9,6 +10,7 @@ class Task:
         self.exceptions_retry = exceptions_retry # a dict that contains exceptions and if the user wants to use them or not
 
     # the function that the user overrides in order to implement his code
+    @abstractmethod
     def action(self, user_input: Any|None):
         pass
 
