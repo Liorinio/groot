@@ -5,10 +5,10 @@ from typing import Any
 
 class Task(ABC):
     """
-        The Task's constructor. it receives a number which represents the id of the task, name for the task,
-        a number which defines how many retries the task will have and a dictionary that contains exceptions
-        and a boolean value which determines if the user wants to check this exception in its code or not
-        """
+    The Task's constructor. it receives a number which represents the id of the task, name for the task,
+    a number which defines how many retries the task will have and a dictionary that contains exceptions
+    and a boolean value which determines if the user wants to check this exception in its code or not
+    """
     def __init__(self, task_id: int, max_retries: int, name: str, exceptions_retry: dict[Exception, bool]):
         self.task_id = task_id
         self.max_retries = max_retries
