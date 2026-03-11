@@ -4,7 +4,12 @@ from start_conditon import StartCondition
 from cache_type import CacheType
 
 class Dag:
-    def __init__(self, dag_id:int, name:str, start_condition:StartCondition,start_time:datetime,
+    """
+    The Dag's constructor. it receives a number which represents the id of the dag, name for the dag, a start condition from the available start conditions of the library,
+    a cache type from the available cache types of the library, a dictionary which contains a task as the key and list of all the tasks that depend on it as the value
+    and a boolean parameter which defines if the output of the dag should be saved or not
+    """
+    def __init__(self, dag_id:int, name:str, start_condition:StartCondition, start_time:datetime,
                  cache_type:CacheType,tasks: dict[Task, list[Task]], exit_point_persistent:bool):
         self.dag_id = dag_id
         self.name = name
@@ -18,6 +23,8 @@ class Dag:
     def start_trigger(self):
         ...
 
-    #adds a task to the dag
+    """
+    The 'add_task()' function get a task and a list of the tasks that depend on it and adds the task to the dag
+    """
     def add_task(self, task: Task, depended_tasks:list[Task]):
         self.tasks[task] = depended_tasks
