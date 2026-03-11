@@ -1,4 +1,6 @@
 from datetime import datetime
+from typing import Tuple, Optional
+
 from task import Task
 from start_conditon import StartCondition
 from cache_type import CacheType
@@ -20,8 +22,13 @@ class Dag:
         self.exit_point_persistent = exit_point_persistent
 
     # defines start trigger
-    def start_trigger(self):
-        ...
+    def start_trigger(self) -> Tuple[datetime, Optional[str]]:
+        if self.start_condition.name == "date":
+            return self.start_time, None
+        elif self.start_condition.name == "trigger":
+            return self.start_time, f"{self.name}_trigger"
+        else:
+            raise ValueError(f"Unsupported start condition: {self.start_condition}")
 
     """
     The 'add_task()' function get a task and a list of the tasks that depend on it and adds the task to the dag
