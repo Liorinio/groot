@@ -5,6 +5,26 @@ from start_conditon import StartCondition
 from cache_type import CacheType
 
 
+def choice_options() -> str:
+    options_dict = {1: "None", 2: "once", 3: "hourly", 4: "daily", 5: "weekly", 6: "monthly", 7: "yearly"}
+
+    for key, value in options_dict.items():
+        print(f"{key}: {value}")
+
+    while True:
+        choice = input("choose one of the presented options: ").strip()
+        try:
+            choice_number = int(choice)
+            if 2 <= choice_number <= 7:
+                return "@" + options_dict[choice_number]
+            elif choice_number == 1:
+                return options_dict[choice_number]
+            else:
+                print("Invalid input: please choose again")
+        except ValueError:
+            print("Invalid input: please choose again")
+
+
 class Dag:
     """
     The Dag's constructor. it receives a number which represents the id of the dag, name for the dag, a start condition from the available start conditions of the library,
@@ -25,7 +45,7 @@ class Dag:
     # defines start trigger
     def start_trigger(self) -> Tuple[datetime, Optional[str]]:
         if self.start_condition.name == "date":
-            time_trigger = self.__choice_options()
+            time_trigger = choice_options()
             return self.start_time, time_trigger
         elif self.start_condition.name == "trigger":
             return self.start_time, f"{self.name}_trigger"
@@ -38,22 +58,3 @@ class Dag:
 
     def add_task(self, task: Task, depended_tasks: list[Task]):
         self.tasks[task] = depended_tasks
-
-    def __choice_options(self) -> str:
-        options_dict = {1: "None", 2: "once", 3: "hourly", 4: "daily", 5: "weekly", 6: "monthly", 7: "yearly"}
-
-        for key, value in options_dict.items():
-            print(f"{key}: {value}")
-
-        while True:
-            choice = input("choose one of the presented options: ").strip()
-            try:
-                choice_number = int(choice)
-                if 2 <= choice_number <= 7:
-                    return "@" + options_dict[choice_number]
-                elif choice_number == 1:
-                    return options_dict[choice_number]
-                else:
-                    print("Invalid input: please choose again")
-            except ValueError:
-                print("Invalid input: please choose again")
