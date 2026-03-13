@@ -22,13 +22,18 @@ class AirflowDagConverter(AirflowConvertor):
 
         return created_dag
     
-    def _create_python_operator_from_task(task_convertor:AirflowTaskConvertor):
-        task = PythonOperator(task_id= task_convertor.task.task_id,
-                               python_callable=task_convertor.convert)
-        return task
-    
 
 
+    def _convert_first_pytask_to_airflow_task(self) -> PythonOperator:
+        task = self._find_first_task
+        convertor = AirflowTaskConvertor(task)
+        converted_task = convertor.convert_with_input(None)
+        return converted_task
+
+    def _convert_pytasks_to_airflow_tasks(self) -> dict[PythonOperator, list[PythonOperator]]:
+        first_task:PythonOperator = self._convert_first_pytask_to_airflow_task
+        input=first_task.execute_callable
+        
 
     def set_task_dependencies(self,task: PythonOperator):
         task.set_downstream
