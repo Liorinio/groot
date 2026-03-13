@@ -1,6 +1,11 @@
 import pickle
 from typing import Callable, Any
 from task import Task
+from fastapi import FastAPI
+from cli_commands_to_code import deploy_uvicorn
+
+
+app = FastAPI()
 
 
 def process(input_data,model):
@@ -11,7 +16,6 @@ def process(input_data,model):
     except Exception as e:
         print(f"An error occurred during model loading or inference: {e}")
         return None
-
 
 class DefaultModelTask(Task):
     def action(self, user_input: Any | None):
@@ -41,4 +45,8 @@ class DefaultModelTask(Task):
             print("check if you saved the model and if you did, check where did you saved it")
 
 
-
+@app.post("/predictions")
+def get_predictions(user_input: Any | None, task_id: int,max_retries: int,name: str, exceptions_retry: dict[Exception, bool],model_path: str):
+    model_task = DefaultModelTask(task_id,max_retries ,name, exceptions_retry,model_path)
+    deploy_uvicorn()
+    return model_task.action(user_input)

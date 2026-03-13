@@ -131,3 +131,4 @@ wheel
 wirerope
 wrapt
 zipp
+fastapi
