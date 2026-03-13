@@ -9,6 +9,9 @@ app = FastAPI()
 
 
 def process(input_data,model):
+    """
+    The function receives input data from the user and the model that the user uses, and return the predictions of the model.
+    """
     try:
         predictions = model.predict(input_data)
         return predictions
@@ -28,10 +31,17 @@ class DefaultModelTask(Task):
     def __init__(self,task_id: int,max_retries: int,name: str, exceptions_retry: dict[Exception, bool],model_path: str):
         super().__init__(task_id, max_retries, name, exceptions_retry)
 
+        """
+        The class's constructor. It receives the same parameters as its parent class in addition to a path to where the model is saved
+        """
+
         self.model_path = model_path
         self.model = None
 
     def __load_model(self):
+        """
+        A function that loads the model. The model should be contained in a pickle file
+        """
         try:
             with open(self.model_path, "rb") as f:
                 self.model = pickle.load(f)
@@ -43,6 +53,8 @@ class DefaultModelTask(Task):
     def __check_storage(self):
         if FileNotFoundError in self.exceptions_retry.keys() and self.exceptions_retry[FileNotFoundError]:
             print("check if you saved the model and if you did, check where did you saved it")
+        else:
+            self.exceptions_retry[FileNotFoundError] = True
 
 
 @app.post("/predictions")

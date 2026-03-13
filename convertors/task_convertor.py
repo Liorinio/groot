@@ -13,6 +13,6 @@ class AirflowTaskConvertor(AirflowConvertor):
 
     def convert(self):
         """
-        The function allows to convert a Dag to an Airflow Dag
+        The function allows to convert a Task to an Airflow Task
         """
         pass

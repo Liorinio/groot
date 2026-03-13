@@ -20,8 +20,7 @@ class AirflowDagConverter(AirflowConvertor):
 
     def _find_first_task(self) -> Task:
         """
-        A function that finds and returns the first task in the dag
-        :return:
+        A function which finds and returns the first task in the dag
         """
         tasks = self.dag.tasks
         list_tasks = tasks.values()
@@ -36,4 +35,7 @@ class AirflowDagConverter(AirflowConvertor):
                 return task
 
     def _validate_task_order(self):
+        """
+        A function which checks the order of the tasks in the dag
+        """
         ...
