@@ -9,7 +9,7 @@ class AirflowDeployer(Deployer):
     def __init__(self, dag_file_path: str, repo_url: str, dags_dir: str = "/opt/airflow/dags"):
         """
         The '__init__()' function gets a dag file path, a remote repo URL, and a local dags directory
-        and initializes the Airflow_Deployer.
+        and initializes the AirflowDeployer.
         """
         self.dag_file_path = dag_file_path
         self.repo_url = repo_url
@@ -35,7 +35,7 @@ class AirflowDeployer(Deployer):
     def deploy(self) -> bool:
         """
         The 'deploy()' function syncs the dags directory with git and copies the dag file into it,
-        so that Airflow's LocalExecutor can detect and run it.
+        so that Airflow's Executor can detect and run it.
         """
         if not self._git_sync():
             return False
