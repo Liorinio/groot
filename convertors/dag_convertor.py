@@ -6,12 +6,23 @@ from convertors.convertors import AirflowConvertor
 class AirflowDagConverter(AirflowConvertor):
 
     def __init__(self, dag: Dag):
+        """
+        The AirflowDagConverter's constructor.
+        It receives a Dag
+        """
         self.dag = dag
 
     def convert(self):
+        """
+        The function allows to convert a Dag to an Airflow Dag
+        """
         pass
 
     def _find_first_task(self) -> Task:
+        """
+        A function that finds and returns the first task in the dag
+        :return:
+        """
         tasks = self.dag.tasks
         list_tasks = tasks.values()
         set_tasks:set = set()

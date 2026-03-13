@@ -5,7 +5,14 @@ from convertors.convertors import AirflowConvertor
 class AirflowTaskConvertor(AirflowConvertor):
 
     def __init__(self, task: Task):
+        """
+        The AirflowTaskConvertor's constructor.
+        It receives a Dag
+        """
         self.task = task
 
     def convert(self):
+        """
+        The function allows to convert a Dag to an Airflow Dag
+        """
         pass
