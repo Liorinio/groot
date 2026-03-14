@@ -1,4 +1,3 @@
-from airflow.providers.standard.operators.python import PythonOperator
 from basics.task import Task
 from convertors.convertors import AirflowConvertor
 from airflow.providers.standard.operators.python import PythonOperator
