@@ -1,8 +1,7 @@
 import os
-from typing import Any
-
 import boto3
 import pickle
+from typing import Any
 from dotenv import load_dotenv
 
 
@@ -14,30 +13,42 @@ secret_key = os.environ["S3_SECRET_KEY"]
 primitives = (bool, str, int, float, type(None))
 
 
-def s3_resource():
-    return boto3.resource('s3', aws_access_key_id=access_key, aws_secret_access_key=secret_key)
-
-
 def s3_client():
+    """
+    This function connects to the s3 client with the global credentials read from a .env file
+    """
     return boto3.client('s3', aws_access_key_id=access_key, aws_secret_access_key=secret_key)
 
 
 def read_from_s3(path) -> Any:
+    """
+    This function reads the content in the s3 path provided,
+    it should be under the global bucket name and root folder
+    returns the value she read unpickled
+    """
     client = s3_client()
     response = client.get_object(Key=path, Bucket=bucket_name)
     output = pickle.loads(response["Body"].read())
+    client.close()
     return output
 
 
 def write_to_s3(output: Any, task_id: str, dag_id: str) -> str:
-    client = s3_resource()
+    """
+    this function writes to s3 in the path of dag_id/task_id within the root path provided in the .env file,
+    returns the path which she wrote to using a pickle file
+    """
+    client = s3_client()
     data = pickle.dumps(output)
     path = f"{root_folder}/{dag_id}/{task_id}"
-    client.Bucket(bucket_name).put_object(Key=path, Body=data)
+    client.put_object(Bucket= bucket_name, Key=path, Body=data)
     return path
 
 
 def validate_s3_path(path: str, dag_id) -> bool:
+    """
+    this function validates if this path exists in s3, returns a boolean value
+    """
     dag_path = f"{root_folder}/{dag_id}"
     if path.startswith(dag_path):
         s3 = s3_client()
@@ -50,5 +61,8 @@ def validate_s3_path(path: str, dag_id) -> bool:
 
 
 def should_write_s3(output: Any) -> bool:
+    """
+    This function checks if the value provided by the client should be written to s3
+    """
     return type(output) not in primitives
 
