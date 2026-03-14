@@ -22,11 +22,11 @@ class Task(ABC):
         """
         the function that the user overrides in order to implement his code
         """
-        pass
 
     @abstractmethod
     def on_failure(self) -> Callable:
         """
-        The on_failure() function is a function that the user overrides to create a function that defines what will happen when all the retries have failed
+        The on_failure() function is a function that the user overrides to create a function that defines what will
+        happen when all the retries have failed
         """
         ...
