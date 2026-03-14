@@ -57,3 +57,11 @@ class Dag:
         The 'add_task()' function get a task and a list of the tasks that depend on it and adds the task to the dag
         """
         self.tasks[task] = depended_tasks
+
+    def check_tags_in_dag(self):
+        """
+        This function checks if there is a task in the dag that has failed
+        """
+        for task in self.tasks:
+            if task.is_task_failed:
+                task.on_failure()

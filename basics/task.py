@@ -14,8 +14,10 @@ class Task(ABC):
         self.task_id = task_id
         self.max_retries = max_retries
         self.name = name
+        # A dict that contains exceptions and if the user wants to use them or not
         self.exceptions_retry = exceptions_retry
-        # a dict that contains exceptions and if the user wants to use them or not
+        # A boolean variable that states if the task has failed or not
+        self.is_task_failed = None
 
     @abstractmethod
     def action(self, user_input: Any | None):
@@ -26,7 +28,7 @@ class Task(ABC):
     @abstractmethod
     def on_failure(self) -> Callable:
         """
-        The on_failure() function is a function that the user overrides to create a function that defines what will
-        happen when all the retries have failed
+        The on_failure() function is a function that defines what will happen if the action() function fails
+        and the exceptions that returned from the action() function are in the exceptions_retry dict.
         """
         ...
