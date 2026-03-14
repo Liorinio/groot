@@ -5,7 +5,7 @@ from typing import Any
 
 class Task(ABC):
 
-    def __init__(self, task_id: int, max_retries: int, name: str, exceptions_retry: dict[Exception, bool]):
+    def __init__(self, task_id: str, max_retries: int, name: str, exceptions_retry: dict[Exception, bool]):
         """
         The Task's constructor. it receives a number which represents the id of the task, name for the task,
         a number which defines how many retries the task will have and a dictionary that contains exceptions
