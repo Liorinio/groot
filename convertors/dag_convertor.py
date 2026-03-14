@@ -15,25 +15,34 @@ class AirflowDagConverter(AirflowConvertor):
         """
         self.dag = dag
 
-    def _get_task_by_id(self, tasks:dict[PythonOperator, list[PythonOperator]],task_id:str) ->PythonOperator:
+    @staticmethod
+    def _get_task_by_id(cls, tasks:dict[PythonOperator, list[PythonOperator]],task_id:str) -> PythonOperator:
         for task in tasks.keys():
             if task.task_id == task_id:
                 return task
+
+    def get_python_task_by_id(self, task_id):
+        for task in self.dag.tasks.keys():
+            if task.task_id == task_id:
+                return task
+            for value_task in self.dag.tasks[task]:
+                if value_task.task_id == task_id:
+                    return value_task
             
-    def _convert_single_pytask_to_airflow_tasks(self,tasks_id_set:set,task_id:str,
-                                                tasks:dict[PythonOperator, list[PythonOperator]]) -> PythonOperator:
-        task = AirflowTaskConvertor(self._get_task_by_id(tasks,task_id)).convert()
+    def _convert_single_pytask_to_airflow_tasks(self,tasks_id_set:set,task_id:str, former_task_id) -> PythonOperator:
+        task = AirflowTaskConvertor(self.get_python_task_by_id(task_id), self.dag.dag_id, former_task_id).convert()
         tasks_id_set.add(task_id)
         return task
 
     def _convert_depend_tasks(self,python_tasks:list[Task],tasks_id_set:set,
-                              dag_tasks:dict[PythonOperator,list[PythonOperator]])->list[PythonOperator]:
+                              dag_tasks:dict[PythonOperator,list[PythonOperator]], former_task_id) \
+            -> list[PythonOperator]:
         
-        depend_tasks:list[PythonOperator] =[]
+        depend_tasks:list[PythonOperator] = []
         for depend_task in python_tasks:
             if depend_task.task_id not in tasks_id_set:
                 converted_depend_task = self._convert_single_pytask_to_airflow_tasks(tasks_id_set,depend_task.task_id,
-                                                                                     dag_tasks)
+                                                                                     former_task_id)
                 depend_tasks.append(converted_depend_task)
                 dag_tasks[converted_depend_task] = []
             else:
@@ -48,13 +57,14 @@ class AirflowDagConverter(AirflowConvertor):
         for key in tasks.keys():
             depend_tasks:list[PythonOperator] =[]
             if key.task_id not in tasks_id_set:
-                task = self._convert_single_pytask_to_airflow_tasks(tasks_id_set, key.task_id,airflow_tasks)
+                task = self._convert_single_pytask_to_airflow_tasks(tasks_id_set, key.task_id, key.task_id)
                 airflow_tasks[task] = []
-            depend_tasks = self._convert_depend_tasks(tasks.get(key),tasks_id_set,airflow_tasks)
-            airflow_tasks[self._get_task_by_id(key.task_id)] = depend_tasks
+            depend_tasks = self._convert_depend_tasks(tasks.get(key),tasks_id_set,airflow_tasks, key.task_id)
+            airflow_tasks[self._get_task_by_id(self, airflow_tasks, key.task_id)] = depend_tasks
         return airflow_tasks
 
-    def _set_dependencies_for_tasks(self, tasks:dict[PythonOperator, list[PythonOperator]]):
+    @staticmethod
+    def _set_dependencies_for_tasks(cls, tasks:dict[PythonOperator, list[PythonOperator]]):
         for task in tasks.keys():
             task.set_downstream(tasks.get(task))
 
@@ -82,8 +92,10 @@ class AirflowDagConverter(AirflowConvertor):
         ...
 
     def convert(self):
-        created_dag = DAG(
+        with DAG(
             dag_id=self.dag.dag_id,
-            start_date=self.dag.start_time
-        )
-        return created_dag
+            start_date=self.dag.start_time,
+        ) as dag:
+            tasks = self._convert_pytasks_to_airflow_tasks()
+            self._set_dependencies_for_tasks(self, tasks)
+        return dag
