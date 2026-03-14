@@ -47,12 +47,13 @@ class DefaultModelTask(Task):
                 self.model = pickle.load(f)
                 print(f"Model loaded successfully from {self.model_path}")
         except FileNotFoundError:
+            self.is_task_failed = True
             print(f"Error: The file {self.model_path} was not found.")
             return None
 
     def __check_storage(self):
         if FileNotFoundError in self.exceptions_retry.keys() and self.exceptions_retry[FileNotFoundError]:
-            print("check if you saved the model and if you did, check where did you saved it")
+            print("Check if you saved the model and if you did, check where did you saved it")
         else:
             self.exceptions_retry[FileNotFoundError] = True
 
