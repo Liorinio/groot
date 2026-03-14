@@ -8,7 +8,7 @@ class AirflowTaskConvertor(AirflowConvertor):
     def __init__(self, task: Task):
         """
         The AirflowTaskConvertor's constructor.
-        It receives a Dag
+        It receives a Task
         """
         self.task = task
 
@@ -19,6 +19,6 @@ class AirflowTaskConvertor(AirflowConvertor):
 
     def convert_with_input(self, **context):
         """
-        The function allows to convert a Dag to an Airflow Dag
+        The function wraps the clients task with the s3 writer and reader
         """
 
