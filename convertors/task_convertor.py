@@ -13,7 +13,9 @@ class AirflowTaskConvertor(AirflowConvertor):
         self.task = task
 
     def convert(self) -> PythonOperator:
-        pass
+        """
+        The function creates a python operator from the convert_with_input() function
+        """
 
     def convert_with_input(self, **context):
         """
