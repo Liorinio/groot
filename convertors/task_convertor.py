@@ -19,6 +19,12 @@ class AirflowTaskConvertor(AirflowConvertor):
         """
         The function creates a python operator from the convert_with_input() function
         """
+        return PythonOperator(
+            task_id=self.task.task_id,
+            provide_context=True,
+            xcom_push=True,
+            python_callable=self.wrapped_action
+        )
 
     def wrapped_action(self, **context):
         """
