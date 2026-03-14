@@ -27,7 +27,7 @@ def choice_options() -> str:
 
 class Dag:
 
-    def __init__(self, dag_id: int, name: str, start_condition: StartCondition, start_time: datetime,
+    def __init__(self, dag_id: str, name: str, start_condition: StartCondition, start_time: datetime,
                  cache_type: CacheType, tasks: dict[Task, list[Task]], exit_point_persistent: bool):
         """
         The Dag's constructor. it receives a number which represents the id of the dag, name for the dag, a start condition from the available start conditions of the library,

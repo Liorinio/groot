@@ -27,8 +27,8 @@ def read_from_s3(path) -> Any:
     returns the value she read unpickled
     """
     client = s3_client()
-    response = client.get_object(Key=path, Bucket=bucket_name)
-    output = pickle.loads(response["Body"].read())
+    response: dict = client.get_object(Key=path, Bucket=bucket_name)
+    output: Any = pickle.loads(response["Body"].read())
     client.close()
     return output
 
@@ -39,18 +39,18 @@ def write_to_s3(output: Any, task_id: str, dag_id: str) -> str:
     returns the path which she wrote to using a pickle file
     """
     client = s3_client()
-    data = pickle.dumps(output)
-    path = f"{root_folder}/{dag_id}/{task_id}"
-    client.put_object(Bucket= bucket_name, Key=path, Body=data)
+    data: bytes = pickle.dumps(output)
+    path: str = f"{root_folder}/{dag_id}/{task_id}"
+    client.put_object(Bucket=bucket_name, Key=path, Body=data)
     return path
 
 
-def validate_s3_path(path: str, dag_id) -> bool:
+def validate_s3_path(path: str, dag_id: str, task_id: str) -> bool:
     """
     this function validates if this path exists in s3, returns a boolean value
     """
-    dag_path = f"{root_folder}/{dag_id}"
-    if path.startswith(dag_path):
+    input_path: str = f"{root_folder}/{dag_id}/{task_id}"
+    if path == input_path:
         s3 = s3_client()
         try:
             s3.head_object(Bucket=bucket_name, Key=path)
@@ -58,6 +58,8 @@ def validate_s3_path(path: str, dag_id) -> bool:
         except s3.exceptions.ClientError as e:
             if e.response['Error']['Code'] == '404':
                 return False
+    else:
+        return False
 
 
 def should_write_s3(output: Any) -> bool:
