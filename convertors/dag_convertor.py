@@ -9,9 +9,14 @@ from convertors.task_convertor import AirflowTaskConvertor
 class AirflowDagConverter(AirflowConvertor):
 
     def __init__(self, dag: Dag):
+        """
+        The AirflowDagConverter's constructor.
+        It receives a Dag
+        """
         self.dag = dag
 
     def convert(self):
+<<<<<<< HEAD
         created_dag = DAG(
             dag_id= self.dag.dag_id
             start_date= self.dag.
@@ -59,8 +64,18 @@ class AirflowDagConverter(AirflowConvertor):
 
     def set_task_dependencies(self,task: PythonOperator):
         task.set_downstream
+=======
+        """
+        The function allows to convert a Dag to an Airflow Dag
+        """
+        pass
+>>>>>>> dev
 
     def _find_first_task(self) -> Task:
+        """
+        A function that finds and returns the first task in the dag
+        :return:
+        """
         tasks = self.dag.tasks
         list_tasks = tasks.values()
         set_tasks:set = set()
@@ -74,4 +89,7 @@ class AirflowDagConverter(AirflowConvertor):
                 return task
 
     def _validate_task_order(self):
+        """
+        a function that checks if the dag is a validate one
+        """
         ...
