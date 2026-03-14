@@ -1,9 +1,10 @@
 from enum import Enum
 
-"""
-defines three cache types: none, regular and reverse
-"""
+
 class CacheType(Enum):
+    """
+    Defines three cache types: none, regular and reverse
+    """
     NONE = "none"
     REGULAR = "regular"
     REVERSE = "reverse"

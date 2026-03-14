@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class Convertor(ABC):
     """
-    abstract method that allows to convert
+    Abstract method that allows to convert
     """
     @abstractmethod
     def convert(self):
@@ -12,7 +12,7 @@ class Convertor(ABC):
 
 class AirflowConvertor(Convertor):
     """
-    The function allows to convert object to their counterparts in Airflow
+    The function allows to convert objects to their counterparts in Airflow
     """
     def convert(self):
         pass
