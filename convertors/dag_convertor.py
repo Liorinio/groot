@@ -16,7 +16,6 @@ class AirflowDagConverter(AirflowConvertor):
         self.dag = dag
 
     def convert(self):
-<<<<<<< HEAD
         created_dag = DAG(
             dag_id= self.dag.dag_id
             start_date= self.dag.
@@ -38,19 +37,31 @@ class AirflowDagConverter(AirflowConvertor):
     def _convert_pytasks_to_airflow_tasks(self) -> dict[PythonOperator, list[PythonOperator]]:
         first_task:PythonOperator = self._convert_first_pytask_to_airflow_task()
         set_airflow_tasks:set ={first_task.dag_id}
-        task_input=first_task.execute_callable()
-        tasks = self.dag.tasks
         airflow_tasks: dict[PythonOperator, list[PythonOperator]] = {first_task:[]}
+        tasks = self.dag.tasks
+        
 
-        for key in tasks.keys:
+        for key in tasks.keys():
             depend_tasks:list[PythonOperator] =[]
-            if key.task_id in set_airflow_tasks:
-                task_input = self._get_task_by_id(key.task_id).execute_callable()
-                for task in tasks.get(key):
-                    if task.task_id in set_airflow_tasks:
-                        depend_tasks.append(self._get_task_by_id(task.task_id))
-                    else:
-                        
+            if key.task_id not in set_airflow_tasks:
+                task = AirflowTaskConvertor(self._get_task_by_id(key.task_id)).convert()
+                set_airflow_tasks.add(task.task_id)
+                airflow_tasks[task] = []
+            for depend_task in tasks.get(self._get_task_by_id(key.task_id)):
+                if depend_task.task_id not in set_airflow_tasks:
+                    converted_depend_task = AirflowTaskConvertor(self._get_task_by_id
+                                                                 (depend_task.task_id)).convert()
+                    set_airflow_tasks.add(converted_depend_task.task_id)
+                    depend_tasks.append(converted_depend_task)
+                    airflow_tasks[converted_depend_task] = []
+                else:
+                    set_airflow_tasks.add(depend_task.task_id)
+            airflow_tasks[self._get_task_by_id(key.task_id)] = depend_tasks
+
+
+
+
+               
 
 
 
@@ -64,12 +75,6 @@ class AirflowDagConverter(AirflowConvertor):
 
     def set_task_dependencies(self,task: PythonOperator):
         task.set_downstream
-=======
-        """
-        The function allows to convert a Dag to an Airflow Dag
-        """
-        pass
->>>>>>> dev
 
     def _find_first_task(self) -> Task:
         """
