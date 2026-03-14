@@ -20,6 +20,7 @@ def process(input_data,model):
         print(f"An error occurred during model loading or inference: {e}")
         return None
 
+
 class DefaultModelTask(Task):
     def action(self, user_input: Any | None):
         self.__load_model()
