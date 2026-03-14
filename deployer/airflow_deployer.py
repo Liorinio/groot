@@ -31,7 +31,6 @@ class AirflowDeployer(Deployer):
         except subprocess.CalledProcessError as e:
             raise f"Git sync failed: {e}"
 
-
     def deploy(self) -> bool:
         """
         The 'deploy()' function syncs the dags directory with git and copies the dag file into it,
