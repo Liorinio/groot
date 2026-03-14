@@ -36,6 +36,6 @@ class AirflowDagConverter(AirflowConvertor):
 
     def _validate_task_order(self):
         """
-        A function which checks the order of the tasks in the dag
+        a function that checks if the dag is a validate one
         """
         ...
