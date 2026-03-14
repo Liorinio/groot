@@ -14,8 +14,10 @@ class Task(ABC):
         self.task_id = task_id
         self.max_retries = max_retries
         self.name = name
-        # a dict that contains exceptions and if the user wants to use them or not
+        # A dict that contains exceptions and if the user wants to use them or not
         self.exceptions_retry = exceptions_retry
+        # A boolean variable that states if the task has failed or not
+        self.is_task_failed = None
 
     @abstractmethod
     def action(self, user_input: Any | None):
