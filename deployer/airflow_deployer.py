@@ -31,6 +31,26 @@ class AirflowDeployer(Deployer):
         except subprocess.CalledProcessError as e:
             raise f"Git sync failed: {e}"
 
+    def push_dag_to_git(self, dag_file_path: str) -> bool:
+        """
+        The 'push_dag_to_git()' function gets a filepath of a DAG file, copies it into
+        the local repo directory, and pushes it to the remote git repository.
+        """
+        try:
+            dag_name = os.path.basename(dag_file_path)
+            dest = os.path.join(self.dags_dir, dag_name)
+            shutil.copy2(dag_file_path, dest)
+
+            subprocess.run(["git", "-C", self.dags_dir, "add", dag_name], check=True)
+            subprocess.run(["git", "-C", self.dags_dir, "commit", "-m", f"Add DAG: {dag_name}"], check=True)
+            subprocess.run(["git", "-C", self.dags_dir, "push"], check=True)
+
+            print(f"DAG '{dag_name}' pushed to git successfully.")
+            return True
+        except subprocess.CalledProcessError as e:
+            print(f"Git push failed: {e}")
+            return False
+
     def deploy(self) -> bool:
         """
         The 'deploy()' function syncs the dags directory with git and copies the dag file into it,
@@ -39,8 +59,8 @@ class AirflowDeployer(Deployer):
         if not self._git_sync():
             return False
 
-        dag_name = os.path.basename(self.dag_file_path)
-        dest = os.path.join(self.dags_dir, dag_name)
-        shutil.copy2(self.dag_file_path, dest)
-        print(f"DAG '{dag_name}' deployed to {dest}")
+        if not self.push_dag_to_git(self.dag_file_path):
+            return False
+
+        print(f"DAG '{os.path.basename(self.dag_file_path)}' deployed successfully.")
         return True
