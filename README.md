@@ -2,7 +2,7 @@
 
 groot - documentation
 
-groot is a library that is designed for data scientists. The library’s purpose is to wrap all of the machine learning pipeline, deploy it and monitor it. It will achieve this goal by wrapping each section of the pipeline, connecting them together after and using different methods in order to deploy it.
+groot is a library that is designed for data scientists. The library’s purpose is to wrap all the machine learning pipeline, deploy it and monitor it. It will achieve this goal by wrapping each section of the pipeline, connecting them together after and using different methods in order to deploy it.
 
 Task
 This class is a class that defines a wrapped section of machine learning. This class is abstract, so in order to create a task, you will need to inherit from this class.
@@ -28,7 +28,7 @@ Moreover, I have created some built-in tasks for you.
 
 DefaultModelTask
 This task’s purpose is to implement your model and to allow accessibility to it.
-The model you implement should be saved in a pickle file, and contains a predict() function for getting predictions.
+The model you implement should be saved in a pickle file, and contains a 'predict()' function for getting predictions.
 
 
 The constructor is the same as the constructor of the Task class, in addition to a path to where the model is saved.
@@ -71,7 +71,7 @@ The on_failure() function of this task guides the user why his action() function
 
 
 Dag
-A DAG (Directed Acyclic Graph) is a directed, non circular graph which will describe the connections between the tasks.
+A DAG (Directed Acyclic Graph) is a directed, non-circular graph which will describe the connections between the tasks.
 
 The constructor contains a few parameters:
 dag_id - The id of the dag.
