@@ -59,14 +59,17 @@ class AirflowDeployer(Deployer):
 
     def deploy(self) -> bool:
         """
-        The 'deploy()' function syncs the dags directory with git and copies the dag file into it,
+        The 'deploy()' function syncs the created_dags directory with git and copies the dag file into it,
         so that Airflow's Executor can detect and run it.
         """
+
+        dag_file_path = self.create_dag_file()
+
+        if not self.push_dag_to_git(dag_file_path):
+            return False
+
         if not self._git_sync():
             return False
 
-        if not self.push_dag_to_git(self.dag_file_path):
-            return False
-
-        logger.info(f"DAG '{os.path.basename(self.dag_file_path)}' deployed successfully.")
+        logger.info(f"DAG '{os.path.basename(dag_file_path)}' deployed successfully.")
         return True
