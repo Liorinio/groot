@@ -66,7 +66,7 @@ class DefaultModelTask(Task):
         try:
             with open(self.model_path, "rb") as f:
                 self.model = pickle.load(f)
-                print(f"Model loaded successfully from {self.model_path}")
+                logger.info(f"Model loaded successfully from {self.model_path}")
         except FileNotFoundError:
             self.is_task_failed = True
             logger.error(f"Error: The file {self.model_path} was not found.")
