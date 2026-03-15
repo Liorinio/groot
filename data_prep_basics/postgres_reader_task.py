@@ -20,7 +20,7 @@ class PostgresReaderTask(Task):
     def on_failure(self) -> Callable:
         def check_details():
             print("Check your connection details")
-        return check_details()
+        return check_details
 
 
     def dataframe_from_postgres(self, cursor, records):
@@ -39,9 +39,7 @@ class PostgresReaderTask(Task):
 
 
     def execute_select_query(self, cursor):
-        db_schema = self.connection_details["schema"]
-        table_name = self.connection_details["table"]
-        table_location = db_schema + "." + table_name
+        table_location = self.connection_details["schema"] + "." +  self.connection_details["table"]
         cursor.execute(query=f"SELECT * FROM {table_location}")
         record = cursor.fetchall()
         return record
