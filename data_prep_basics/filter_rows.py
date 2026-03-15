@@ -62,4 +62,3 @@ class FilterRowsTask(Task):
         if not isinstance(df, pd.DataFrame):
             self.is_task_failed = True
             logger.error("Error: user_input must be a pandas DataFrame.")
-

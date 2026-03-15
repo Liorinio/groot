@@ -141,3 +141,5 @@ fastapi
 subprocess
 pandas
 numpy
+seaborn
+matplotlib-pyplot
