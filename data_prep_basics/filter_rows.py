@@ -1,6 +1,9 @@
+import logging
 import pandas as pd
 from typing import Any, Callable
 from basics.task import Task
+
+logger = logging.getLogger(__name__)
 
 
 def process(input_data: pd.DataFrame, condition: Callable[[pd.DataFrame], pd.Series]) -> pd.DataFrame | None:
@@ -11,7 +14,7 @@ def process(input_data: pd.DataFrame, condition: Callable[[pd.DataFrame], pd.Ser
     try:
         return input_data[condition(input_data)]
     except Exception as e:
-        print(f"An error occurred during row filtering: {e}")
+        logger.error(f"An error occurred during row filtering: {e}")
         return None
 
 
@@ -48,7 +51,7 @@ class FilterRowsTask(Task):
         """
         if not isinstance(df, pd.DataFrame):
             self.is_task_failed = True
-            print("Error: user_input must be a pandas DataFrame.")
+            logger.error("Error: user_input must be a pandas DataFrame.")
 
     def __check_condition(self):
         """
@@ -56,6 +59,6 @@ class FilterRowsTask(Task):
         If ValueError is already being retried, it prints a hint, otherwise enables retry.
         """
         if self.exceptions_retry.get(ValueError()):
-            print("Check if your condition function returns a valid boolean Series.")
+            logger.warning("Check if your condition function returns a valid boolean Series.")
         else:
             self.exceptions_retry[ValueError()] = True

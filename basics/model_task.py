@@ -1,14 +1,16 @@
+import logging
 import pickle
 from typing import Callable, Any
 from task import Task
 from fastapi import FastAPI
 from cli_commands_to_code import deploy_uvicorn
 
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
 
-def process(input_data,model):
+def process(input_data, model):
     """
     The function receives input data from the user and the model that the user uses, and return the predictions of the model.
     """
@@ -17,13 +19,13 @@ def process(input_data,model):
         return predictions
 
     except Exception as e:
-        print(f"An error occurred during model loading or inference: {e}")
+        logger.error(f"An error occurred during model loading or inference: {e}")
         return None
 
 
 class DefaultModelTask(Task):
 
-    def __init__(self,task_id: str,max_retries: int,name: str, exceptions_retry: dict[Exception, bool], model_path: str):
+    def __init__(self, task_id: str, max_retries: int, name: str, exceptions_retry: dict[Exception, bool], model_path: str):
         super().__init__(task_id, max_retries, name, exceptions_retry)
 
         """
@@ -57,7 +59,7 @@ class DefaultModelTask(Task):
                 print(f"Model loaded successfully from {self.model_path}")
         except FileNotFoundError:
             self.is_task_failed = True
-            print(f"Error: The file {self.model_path} was not found.")
+            logger.error(f"Error: The file {self.model_path} was not found.")
             return None
 
     def __check_storage(self):
@@ -66,13 +68,13 @@ class DefaultModelTask(Task):
         If FileNotFoundError is already being retried, it prints a hint, otherwise enables retry.
         """
         if FileNotFoundError in self.exceptions_retry.keys() and self.exceptions_retry[FileNotFoundError()]:
-            print("Check if you saved the model and if you did, check where did you saved it")
+            logger.warning("Check if you saved the model and if you did, check where did you saved it")
         else:
             self.exceptions_retry[FileNotFoundError()] = True
 
 
 @app.post("/predictions")
 def get_predictions(user_input: Any | None, task_id: str, max_retries: int, name: str, exceptions_retry: dict[Exception, bool], model_path: str):
-    model_task = DefaultModelTask(task_id,max_retries ,name, exceptions_retry,model_path)
+    model_task = DefaultModelTask(task_id, max_retries, name, exceptions_retry, model_path)
     deploy_uvicorn()
     return model_task.action(user_input)

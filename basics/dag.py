@@ -1,9 +1,12 @@
 import uuid
+import logging
 from datetime import datetime
 from typing import Tuple, Optional
 from basics.task import Task
 from basics.start_conditon import StartCondition
 from cache_type import CacheType
+
+logger = logging.getLogger(__name__)
 
 
 def choice_options() -> str:
@@ -21,9 +24,9 @@ def choice_options() -> str:
             elif choice_number == 1:
                 return options_dict[choice_number]
             else:
-                print("Invalid input: please choose again")
+                logger.warning("Invalid input: please choose again")
         except ValueError:
-            print("Invalid input: please choose again")
+            logger.warning("Invalid input: please choose again")
 
 
 class Dag:
@@ -45,8 +48,11 @@ class Dag:
         self.cache_type = cache_type
         self.exit_point_persistent = exit_point_persistent
 
-    # defines start trigger
     def start_trigger(self) -> Tuple[datetime, Optional[str]]:
+        """
+        The 'start_trigger()' function defines the start trigger of the dag based on the start condition
+        and returns the start time and the trigger name.
+        """
         if self.start_condition.name == "date":
             time_trigger = choice_options()
             return self.start_time, time_trigger
@@ -63,8 +69,10 @@ class Dag:
 
     def check_tags_in_dag(self):
         """
-        This function checks if there is a task in the dag that has failed
+        The 'check_tags_in_dag()' function checks if there is a task in the dag that has failed
+        and calls its on_failure() handler.
         """
         for task in self.tasks:
             if task.is_task_failed:
+                logger.error(f"Task '{task.name}' (id={task.task_id}) has failed. Calling on_failure handler.")
                 task.on_failure()

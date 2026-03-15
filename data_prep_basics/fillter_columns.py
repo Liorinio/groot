@@ -1,6 +1,9 @@
+import logging
 import pandas as pd
 from typing import Any, Callable
 from basics.task import Task
+
+logger = logging.getLogger(__name__)
 
 
 def process(input_data: pd.DataFrame, columns: list[str]) -> pd.DataFrame | None:
@@ -11,7 +14,7 @@ def process(input_data: pd.DataFrame, columns: list[str]) -> pd.DataFrame | None
     try:
         return input_data[columns]
     except Exception as e:
-        print(f"An error occurred during column filtering: {e}")
+        logger.error(f"An error occurred during column filtering: {e}")
         return None
 
 
@@ -49,12 +52,12 @@ class FilterColumnsTask(Task):
         """
         if not isinstance(df, pd.DataFrame):
             self.is_task_failed = True
-            print("Error: user_input must be a pandas DataFrame.")
+            logger.error("Error: user_input must be a pandas DataFrame.")
             return
         missing = [col for col in self.columns if col not in df.columns]
         if missing:
             self.is_task_failed = True
-            print(f"Error: The following columns were not found: {missing}")
+            logger.error(f"Error: The following columns were not found: {missing}")
 
     def __check_columns(self):
         """
@@ -62,6 +65,6 @@ class FilterColumnsTask(Task):
         If KeyError is already being retried, it prints a hint, otherwise enables retry.
         """
         if self.exceptions_retry.get(KeyError()):
-            print("Check if the column names are correct and exist in your DataFrame.")
+            logger.warning("Check if the column names are correct and exist in your DataFrame.")
         else:
             self.exceptions_retry[KeyError()] = True

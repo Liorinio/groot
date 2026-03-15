@@ -1,7 +1,10 @@
+import logging
 from deployer.deployer import Deployer
 import os
 import shutil
 import subprocess
+
+logger = logging.getLogger(__name__)
 
 
 class AirflowDeployer(Deployer):
@@ -29,7 +32,8 @@ class AirflowDeployer(Deployer):
                 print("Git pull completed.")
             return True
         except subprocess.CalledProcessError as e:
-            raise f"Git sync failed: {e}"
+            logger.error(f"Git sync failed: {e}")
+            return False
 
     def push_dag_to_git(self, dag_file_path: str) -> bool:
         """
@@ -48,7 +52,7 @@ class AirflowDeployer(Deployer):
             print(f"DAG '{dag_name}' pushed to git successfully.")
             return True
         except subprocess.CalledProcessError as e:
-            print(f"Git push failed: {e}")
+            logger.error(f"Git push failed: {e}")
             return False
 
     def deploy(self) -> bool:
