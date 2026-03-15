@@ -1,7 +1,8 @@
+import uuid
 from datetime import datetime
 from typing import Tuple, Optional
 from basics.task import Task
-from start_conditon import StartCondition
+from basics.start_conditon import StartCondition
 from cache_type import CacheType
 
 
@@ -27,7 +28,7 @@ def choice_options() -> str:
 
 class Dag:
 
-    def __init__(self, dag_id: str, name: str, start_condition: StartCondition, start_time: datetime,
+    def __init__(self, name: str, start_condition: StartCondition, start_time: datetime,
                  cache_type: CacheType, tasks: dict[Task, list[Task]], exit_point_persistent: bool):
         """
         The Dag's constructor. it receives a number which represents the id of the dag, name for the dag,
@@ -36,7 +37,7 @@ class Dag:
         as the key and list of all the tasks that depend on it as the value
         and a boolean parameter which defines if the output of the dag should be saved or not
         """
-        self.dag_id = dag_id
+        self.dag_id = f"{name}-{str(uuid.uuid4())}"
         self.name = name
         self.start_condition = start_condition
         self.start_time = start_time

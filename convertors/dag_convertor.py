@@ -1,9 +1,9 @@
 from basics.dag import Dag
 from basics.task import Task
 from convertors.convertors import AirflowConvertor
-from airflow.sdk import DAG
 from airflow.providers.standard.operators.python import PythonOperator
-from convertors.task_convertor import AirflowTaskConvertor 
+from convertors.task_convertor import AirflowTaskConvertor
+from airflow.sdk import DAG
 
 
 class AirflowDagConverter(AirflowConvertor):
@@ -17,11 +17,17 @@ class AirflowDagConverter(AirflowConvertor):
 
     @staticmethod
     def _get_task_by_id(cls, tasks:dict[PythonOperator, list[PythonOperator]],task_id:str) -> PythonOperator:
+        """
+        finds a task from the pythonoperator dict by its id and returns it
+        """
         for task in tasks.keys():
             if task.task_id == task_id:
                 return task
 
     def get_python_task_by_id(self, task_id):
+        """
+        finds a task from the tasks dict by its id and returns it
+        """
         for task in self.dag.tasks.keys():
             if task.task_id == task_id:
                 return task
@@ -94,6 +100,7 @@ class AirflowDagConverter(AirflowConvertor):
         with DAG(
             dag_id=self.dag.dag_id,
             start_date=self.dag.start_time,
+            is_paused_upon_creation=False
         ) as dag:
             tasks = self._convert_pytasks_to_airflow_tasks()
             self._set_dependencies_for_tasks(self, tasks)

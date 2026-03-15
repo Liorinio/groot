@@ -21,8 +21,6 @@ class AirflowTaskConvertor(AirflowConvertor):
         """
         return PythonOperator(
             task_id=self.task.task_id,
-            provide_context=True,
-            xcom_push=True,
             python_callable=self._wrapped_action
         )
 
