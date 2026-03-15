@@ -29,7 +29,7 @@ class DefaultModelTask(Task):
     def on_failure(self) -> Callable:
         return self.__check_storage()
 
-    def __init__(self,task_id: int,max_retries: int,name: str, exceptions_retry: dict[Exception, bool],model_path: str):
+    def __init__(self,task_id: str, max_retries: int, name: str, exceptions_retry: dict[Exception, bool], model_path: str):
         super().__init__(task_id, max_retries, name, exceptions_retry)
 
         """
@@ -60,7 +60,7 @@ class DefaultModelTask(Task):
 
 
 @app.post("/predictions")
-def get_predictions(user_input: Any | None, task_id: int,max_retries: int,name: str, exceptions_retry: dict[Exception, bool],model_path: str):
+def get_predictions(user_input: Any | None, task_id: str, max_retries: int, name: str, exceptions_retry: dict[Exception, bool], model_path: str):
     model_task = DefaultModelTask(task_id,max_retries ,name, exceptions_retry,model_path)
     deploy_uvicorn()
     return model_task.action(user_input)

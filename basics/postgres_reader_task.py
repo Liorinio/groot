@@ -5,7 +5,7 @@ import pandas as pd
 
 class PostgresReaderTask(Task):
 
-    def __init__(self, task_id: int, max_retries: int, name: str, exceptions_retry: dict[Exception, bool], connection_details: dict[str, str]):
+    def __init__(self, task_id: str, max_retries: int, name: str, exceptions_retry: dict[Exception, bool], connection_details: dict[str, str]):
         super().__init__(task_id, max_retries, name, exceptions_retry)
 
         """
@@ -21,7 +21,6 @@ class PostgresReaderTask(Task):
         def check_details():
             print("Check your connection details")
         return check_details()
-
 
 
     def dataframe_from_postgres(self, cursor, records):
@@ -46,8 +45,4 @@ class PostgresReaderTask(Task):
         cursor.execute(query=f"SELECT * FROM {table_location}")
         record = cursor.fetchall()
         return record
-
-
-
-
 
