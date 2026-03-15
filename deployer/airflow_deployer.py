@@ -11,31 +11,30 @@ logger = logging.getLogger(__name__)
 
 class AirflowDeployer(Deployer):
 
-    def __init__(self, dag_file_path: str, repo_url: str, dags_dir: str = "/opt/airflow/dags"):
+    def __init__(self, dag_object: DAG, repo_url: str, dags_dir: str = "/opt/airflow/created_dags"):
         """
-        The '__init__()' function gets a dag file path, a remote repo URL, and a local dags directory
+        The '__init__()' function gets a dag file path, a remote repo URL, and a local created_dags directory
         and initializes the AirflowDeployer.
         """
-        self.dag_file_path = dag_file_path
+        self.dag_object = dag_object
         self.repo_url = repo_url
         self.dags_dir = dags_dir
 
     def _git_sync(self) -> bool:
         """
-        The '_git_sync()' function syncs the local dags directory with the remote git repository
+        The '_git_sync()' function syncs the local created_dags directory with the remote git repository
         clones it if it doesn't exist, else it pulls the latest changes, and returns True on success.
         """
         try:
             if not os.path.exists(self.dags_dir):
                 subprocess.run(["git", "clone", self.repo_url, self.dags_dir], check=True)
-                logger.info(f"Cloned repo into {self.dags_dir}")
+                print(f"Cloned repo into {self.dags_dir}")
             else:
                 subprocess.run(["git", "-C", self.dags_dir, "pull"], check=True)
-                logger.info("Git pull completed.")
+                print("Git pull completed.")
             return True
         except subprocess.CalledProcessError as e:
-            logger.error(f"Git sync failed: {e}")
-            return False
+            raise f"Git sync failed: {e}"
 
     def push_dag_to_git(self, dag_file_path: str) -> bool:
         """
@@ -51,11 +50,27 @@ class AirflowDeployer(Deployer):
             subprocess.run(["git", "-C", self.dags_dir, "commit", "-m", f"Add DAG: {dag_name}"], check=True)
             subprocess.run(["git", "-C", self.dags_dir, "push"], check=True)
 
-            logger.info(f"DAG '{dag_name}' pushed to git successfully.")
+            print(f"DAG '{dag_name}' pushed to git successfully.")
             return True
         except subprocess.CalledProcessError as e:
-            logger.error(f"Git push failed: {e}")
+            print(f"Git push failed: {e}")
             return False
+
+    def create_dag_file(self) -> str:
+        pickle_dir_path = os.path.abspath("pickles")
+        dags_dir_path = os.path.abspath("created_dags")
+        pickle_file_path = f"{pickle_dir_path}/dag_{self.dag_object.dag_id}.pickle"
+
+        with open(f"{pickle_file_path}", "wb") as file:
+            pickle.dump(self.dag_object, file)
+
+        dag_file_path = f"{dags_dir_path}/{self.dag_object.dag_id}.py"
+        template_file_path = f"{dags_dir_path}/template_dag.py"
+        shutil.copy(template_file_path, dag_file_path)
+
+        return dag_file_path
+
+
 
     def deploy(self) -> bool:
         """
