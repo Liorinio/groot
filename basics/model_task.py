@@ -22,14 +22,8 @@ def process(input_data,model):
 
 
 class DefaultModelTask(Task):
-    def action(self, user_input: Any | None):
-        self.__load_model()
-        process(user_input, self.model)
 
-    def on_failure(self) -> Callable:
-        return self.__check_storage()
-
-    def __init__(self,task_id: int,max_retries: int,name: str, exceptions_retry: dict[Exception, bool],model_path: str):
+    def __init__(self,task_id: str,max_retries: int,name: str, exceptions_retry: dict[Exception, bool], model_path: str):
         super().__init__(task_id, max_retries, name, exceptions_retry)
 
         """
@@ -38,6 +32,13 @@ class DefaultModelTask(Task):
 
         self.model_path = model_path
         self.model = None
+
+    def action(self, user_input: Any | None):
+        self.__load_model()
+        process(user_input, self.model)
+
+    def on_failure(self) -> Callable:
+        return self.__check_storage()
 
     def __load_model(self):
         """
@@ -60,7 +61,7 @@ class DefaultModelTask(Task):
 
 
 @app.post("/predictions")
-def get_predictions(user_input: Any | None, task_id: int,max_retries: int,name: str, exceptions_retry: dict[Exception, bool],model_path: str):
+def get_predictions(user_input: Any | None, task_id: str, max_retries: int, name: str, exceptions_retry: dict[Exception, bool], model_path: str):
     model_task = DefaultModelTask(task_id,max_retries ,name, exceptions_retry,model_path)
     deploy_uvicorn()
     return model_task.action(user_input)
