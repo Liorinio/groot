@@ -1,6 +1,5 @@
 import pandas as pd
 from typing import Any, Callable
-
 from basics.task import Task
 
 

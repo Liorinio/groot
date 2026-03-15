@@ -1,5 +1,5 @@
 from typing import Callable, Any
-from task import Task
+from basics.task import Task
 import psycopg2
 import pandas as pd
 
