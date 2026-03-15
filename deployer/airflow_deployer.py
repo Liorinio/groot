@@ -28,13 +28,14 @@ class AirflowDeployer(Deployer):
         try:
             if not os.path.exists(self.dags_dir):
                 subprocess.run(["git", "clone", self.repo_url, self.dags_dir], check=True)
-                print(f"Cloned repo into {self.dags_dir}")
+                logger.info(f"Cloned repo into {self.dags_dir}")
             else:
                 subprocess.run(["git", "-C", self.dags_dir, "pull"], check=True)
-                print("Git pull completed.")
+                logger.info("Git pull completed.")
             return True
         except subprocess.CalledProcessError as e:
-            raise f"Git sync failed: {e}"
+            logger.error(f"Git sync failed: {e}")
+            return False
 
     def push_dag_to_git(self, dag_file_path: str) -> bool:
         """
@@ -50,13 +51,17 @@ class AirflowDeployer(Deployer):
             subprocess.run(["git", "-C", self.dags_dir, "commit", "-m", f"Add DAG: {dag_name}"], check=True)
             subprocess.run(["git", "-C", self.dags_dir, "push"], check=True)
 
-            print(f"DAG '{dag_name}' pushed to git successfully.")
+            logger.info(f"DAG '{dag_name}' pushed to git successfully.")
             return True
         except subprocess.CalledProcessError as e:
-            print(f"Git push failed: {e}")
+            logger.error(f"Git push failed: {e}")
             return False
 
     def create_dag_file(self) -> str:
+        """
+        The 'create_dag_file()' function creates a pickle file and a dag file from the dag object
+        and returns the path to the created dag file.
+        """
         pickle_dir_path = os.path.abspath("pickles")
         dags_dir_path = os.path.abspath("created_dags")
         pickle_file_path = f"{pickle_dir_path}/dag_{self.dag_object.dag_id}.pickle"
@@ -70,14 +75,11 @@ class AirflowDeployer(Deployer):
 
         return dag_file_path
 
-
-
     def deploy(self) -> bool:
         """
         The 'deploy()' function syncs the created_dags directory with git and copies the dag file into it,
         so that Airflow's Executor can detect and run it.
         """
-
         dag_file_path = self.create_dag_file()
 
         if not self.push_dag_to_git(dag_file_path):
