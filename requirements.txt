@@ -132,3 +132,5 @@ wirerope
 wrapt
 zipp
 fastapi
+
+pandas
