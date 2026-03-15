@@ -4,6 +4,9 @@ from deployer.deployer import Deployer
 import os
 import shutil
 import subprocess
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class AirflowDeployer(Deployer):
@@ -83,6 +86,5 @@ class AirflowDeployer(Deployer):
         if not self._git_sync():
             return False
 
-
-        print(f"DAG '{os.path.basename(dag_file_path)}' deployed successfully.")
+        logger.info(f"DAG '{os.path.basename(dag_file_path)}' deployed successfully.")
         return True
