@@ -17,6 +17,8 @@ argcomplete
 asgiref
 attrs
 blinker
+botocore
+boto3
 cadwyn
 certifi
 cffi
@@ -49,6 +51,7 @@ idna
 importlib_metadata
 itsdangerous
 Jinja2
+jmespath
 jsonschema
 jsonschema-specifications
 lazy-object-proxy
@@ -111,6 +114,7 @@ sqlparse
 starlette
 structlog
 svcs
+s3transfer
 tabulate
 tenacity
 termcolor
