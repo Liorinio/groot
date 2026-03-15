@@ -23,7 +23,7 @@ def process(input_data,model):
 
 class DefaultModelTask(Task):
 
-    def __init__(self,task_id: str, max_retries: int, name: str, exceptions_retry: dict[Exception, bool], model_path: str):
+    def __init__(self,task_id: str,max_retries: int,name: str, exceptions_retry: dict[Exception, bool], model_path: str):
         super().__init__(task_id, max_retries, name, exceptions_retry)
 
         """
@@ -39,7 +39,6 @@ class DefaultModelTask(Task):
 
     def on_failure(self) -> Callable:
         return self.__check_storage()
-
 
     def __load_model(self):
         """
