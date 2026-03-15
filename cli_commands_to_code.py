@@ -1,5 +1,6 @@
 import subprocess
 
+
 def deploy_uvicorn():
     command = ["uvicorn", "main:app", "--reload"]
     try:
@@ -7,5 +8,6 @@ def deploy_uvicorn():
         print("Command was Successful:\n", result.stdout)
     except subprocess.CalledProcessError as e:
         print("Command Failed:\n", e.stderr)
+
 
 deploy_uvicorn()
