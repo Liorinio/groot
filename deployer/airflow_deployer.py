@@ -26,10 +26,10 @@ class AirflowDeployer(Deployer):
         try:
             if not os.path.exists(self.dags_dir):
                 subprocess.run(["git", "clone", self.repo_url, self.dags_dir], check=True)
-                print(f"Cloned repo into {self.dags_dir}")
+                logger.info(f"Cloned repo into {self.dags_dir}")
             else:
                 subprocess.run(["git", "-C", self.dags_dir, "pull"], check=True)
-                print("Git pull completed.")
+                logger.info("Git pull completed.")
             return True
         except subprocess.CalledProcessError as e:
             logger.error(f"Git sync failed: {e}")
@@ -49,7 +49,7 @@ class AirflowDeployer(Deployer):
             subprocess.run(["git", "-C", self.dags_dir, "commit", "-m", f"Add DAG: {dag_name}"], check=True)
             subprocess.run(["git", "-C", self.dags_dir, "push"], check=True)
 
-            print(f"DAG '{dag_name}' pushed to git successfully.")
+            logger.info(f"DAG '{dag_name}' pushed to git successfully.")
             return True
         except subprocess.CalledProcessError as e:
             logger.error(f"Git push failed: {e}")
@@ -66,5 +66,5 @@ class AirflowDeployer(Deployer):
         if not self.push_dag_to_git(self.dag_file_path):
             return False
 
-        print(f"DAG '{os.path.basename(self.dag_file_path)}' deployed successfully.")
+        logger.info(f"DAG '{os.path.basename(self.dag_file_path)}' deployed successfully.")
         return True
