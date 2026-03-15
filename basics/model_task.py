@@ -45,7 +45,7 @@ class DefaultModelTask(Task):
         The 'on_failure()' function returns __check_storage which guides
         the user when the model loading has failed.
         """
-        return self.__check_storage()
+        return self.__check_storage
 
     def __load_model(self):
         """
