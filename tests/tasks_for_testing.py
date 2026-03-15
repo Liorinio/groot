@@ -94,31 +94,6 @@ class ScatterPlotTask(Task):
 
         return check_showing_graph
 
-
-class ScatterPlotTask(Task):
-    def action(self, df: pd.DataFrame | None = None):
-        try:
-            plt.figure(figsize=(10, 5))
-            plt.scatter(df['Possession%'], df['Pass%'])
-            plt.xlabel('Possession')
-            plt.ylabel('Pass')
-            plt.title('Possession VS Pass')
-
-            self.is_task_failed = False
-            plt.show()
-        except Exception as e:
-            self.is_task_failed = True
-            raise e
-
-    def on_failure(self) -> Callable:
-        def check_showing_graph():
-            if self.exceptions_retry.get(ValueError()):
-                logger.warning("Check if the data of both angles are the same size and are arrays.")
-            if self.exceptions_retry.get(NameError()):
-                logger.warning("Check if you spelled the names correctly")
-
-        return check_showing_graph
-
 class SplittingDataTask(Task):
     def action(self, df: pd.DataFrame | None = None):
         try:

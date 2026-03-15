@@ -20,7 +20,7 @@ def process(input_data: pd.DataFrame, condition: Callable[[pd.DataFrame], pd.Ser
 
 class FilterRowsTask(Task):
 
-    def __init__(self, task_id: str, name: str, condition: Callable[[pd.DataFrame], pd.Series],
+    def __init__(self, name: str, condition: Callable[[pd.DataFrame], pd.Series],
                  max_retries: int = 3, exceptions_retry: dict[type, bool] | None = None):
         """
         The class's constructor. It receives the same parameters as its parent class

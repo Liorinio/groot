@@ -5,8 +5,8 @@ import pandas as pd
 
 class PostgresReaderTask(Task):
 
-    def __init__(self, task_id: str, max_retries: int, name: str, exceptions_retry: dict[Exception, bool], connection_details: dict[str, str]):
-        super().__init__(task_id, max_retries, name, exceptions_retry)
+    def __init__(self, max_retries: int, name: str, exceptions_retry: dict[Exception, bool], connection_details: dict[str, str]):
+        super().__init__(max_retries, name, exceptions_retry)
 
         """
         The class's constructor. It receives the same parameters as its parent class in addition to a path to where the model is saved

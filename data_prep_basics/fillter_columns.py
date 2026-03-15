@@ -20,7 +20,7 @@ def process(input_data: pd.DataFrame, columns: list[str]) -> pd.DataFrame | None
 
 class FilterColumnsTask(Task):
 
-    def __init__(self, task_id: str, name: str, columns: list[str],
+    def __init__(self, name: str, columns: list[str],
                  max_retries: int = 3, exceptions_retry: dict[type, bool] | None = None):
         """
         The class's constructor. It receives the same parameters as its parent class
