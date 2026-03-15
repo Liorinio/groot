@@ -132,5 +132,8 @@ wirerope
 wrapt
 zipp
 fastapi
-
+psycopg2
+fastapi
+subprocess
 pandas
+numpy
