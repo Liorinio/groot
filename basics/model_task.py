@@ -34,11 +34,18 @@ class DefaultModelTask(Task):
         self.model = None
 
     def action(self, user_input: Any | None):
+        """
+        This function loads the model from the pickle file and returns its predictions.
+        """
         self.__load_model()
-        process(user_input, self.model)
+        return process(user_input, self.model)
 
     def on_failure(self) -> Callable:
-        return self.__check_storage()
+        """
+        The 'on_failure()' function returns __check_storage which guides
+        the user when the model loading has failed.
+        """
+        return self.__check_storage
 
     def __load_model(self):
         """
@@ -54,10 +61,14 @@ class DefaultModelTask(Task):
             return None
 
     def __check_storage(self):
-        if FileNotFoundError in self.exceptions_retry.keys() and self.exceptions_retry[FileNotFoundError]:
+        """
+        A function that checks if the file exists.
+        If FileNotFoundError is already being retried, it prints a hint, otherwise enables retry.
+        """
+        if FileNotFoundError in self.exceptions_retry.keys() and self.exceptions_retry[FileNotFoundError()]:
             print("Check if you saved the model and if you did, check where did you saved it")
         else:
-            self.exceptions_retry[FileNotFoundError] = True
+            self.exceptions_retry[FileNotFoundError()] = True
 
 
 @app.post("/predictions")
