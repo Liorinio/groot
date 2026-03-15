@@ -44,10 +44,20 @@ class DefaultModelTask(Task):
 
     def on_failure(self) -> Callable:
         """
-        The 'on_failure()' function returns __check_storage which guides
+        The 'on_failure()' function returns check_storage which guides
         the user when the model loading has failed.
         """
-        return self.__check_storage
+        def check_storage():
+            """
+            A function that checks if the file exists.
+            If FileNotFoundError is already being retried, it prints a hint, otherwise enables retry.
+            """
+            if FileNotFoundError in self.exceptions_retry.keys() and self.exceptions_retry[FileNotFoundError()]:
+                logger.warning("Check if you saved the model and if you did, check where did you saved it")
+            else:
+                self.exceptions_retry[FileNotFoundError()] = True
+
+        return check_storage
 
     def __load_model(self):
         """
@@ -61,16 +71,6 @@ class DefaultModelTask(Task):
             self.is_task_failed = True
             logger.error(f"Error: The file {self.model_path} was not found.")
             return None
-
-    def __check_storage(self):
-        """
-        A function that checks if the file exists.
-        If FileNotFoundError is already being retried, it prints a hint, otherwise enables retry.
-        """
-        if FileNotFoundError in self.exceptions_retry.keys() and self.exceptions_retry[FileNotFoundError()]:
-            logger.warning("Check if you saved the model and if you did, check where did you saved it")
-        else:
-            self.exceptions_retry[FileNotFoundError()] = True
 
 
 @app.post("/predictions")

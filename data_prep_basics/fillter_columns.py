@@ -43,7 +43,16 @@ class FilterColumnsTask(Task):
         The 'on_failure()' function returns __check_columns which guides
         the user when the filtering has failed.
         """
-        return self.__check_columns
+        def check_columns():
+            """
+            A function that checks if the requested columns exist in the data.
+            If KeyError is already being retried, it prints a hint, otherwise enables retry.
+            """
+            if self.exceptions_retry.get(KeyError()):
+                logger.warning("Check if the column names are correct and exist in your DataFrame.")
+            else:
+                self.exceptions_retry[KeyError()] = True
+        return check_columns
 
     def __validate_columns(self, df: pd.DataFrame):
         """
@@ -58,13 +67,3 @@ class FilterColumnsTask(Task):
         if missing:
             self.is_task_failed = True
             logger.error(f"Error: The following columns were not found: {missing}")
-
-    def __check_columns(self):
-        """
-        A function that checks if the requested columns exist in the data.
-        If KeyError is already being retried, it prints a hint, otherwise enables retry.
-        """
-        if self.exceptions_retry.get(KeyError()):
-            logger.warning("Check if the column names are correct and exist in your DataFrame.")
-        else:
-            self.exceptions_retry[KeyError()] = True

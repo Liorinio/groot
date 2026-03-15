@@ -43,7 +43,17 @@ class FilterRowsTask(Task):
         The 'on_failure()' function returns __check_condition which guides
         the user when the row filtering has failed.
         """
-        return self.__check_condition
+
+        def check_condition():
+            """
+            A function that checks if the condition function is valid.
+            If ValueError is already being retried, it prints a hint, otherwise enables retry.
+            """
+            if self.exceptions_retry.get(ValueError()):
+                logger.warning("Check if your condition function returns a valid boolean Series.")
+            else:
+                self.exceptions_retry[ValueError()] = True
+        return check_condition
 
     def __validate_input(self, df: pd.DataFrame):
         """
@@ -53,12 +63,3 @@ class FilterRowsTask(Task):
             self.is_task_failed = True
             logger.error("Error: user_input must be a pandas DataFrame.")
 
-    def __check_condition(self):
-        """
-        A function that checks if the condition function is valid.
-        If ValueError is already being retried, it prints a hint, otherwise enables retry.
-        """
-        if self.exceptions_retry.get(ValueError()):
-            logger.warning("Check if your condition function returns a valid boolean Series.")
-        else:
-            self.exceptions_retry[ValueError()] = True
