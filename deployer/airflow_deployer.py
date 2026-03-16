@@ -64,7 +64,9 @@ class AirflowDeployer(Deployer):
         with open(f"{pickle_file_path}", "wb") as file:
             pickle.dump(self.dag_object, file)
 
-        dag_file_path = f"{dags_dir_path}/{self.dag_object.dag_id}.py"
+        dag_file_path = f"{dags_dir_path}/dag_{self.dag_object.dag_id}.py"
+        with open(dag_file_path, 'x') as file:
+            pass
         template_file_path = f"{dags_dir_path}/template_dag.py"
         shutil.copy(template_file_path, dag_file_path)
 

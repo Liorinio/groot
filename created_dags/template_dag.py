@@ -12,3 +12,6 @@ def load_dag():
     with open(pickle_path, "rb") as file:
         created_dag = pickle.load(file)
     return created_dag
+
+dag = load_dag()
+print(dag)

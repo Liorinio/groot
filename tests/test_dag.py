@@ -1,3 +1,6 @@
+import sys
+sys.path.append("/mnt/c/Users/Noago/finalprolect/groot")
+print(sys.path)
 import json
 import datetime
 from typing import Any, Callable
@@ -6,6 +9,7 @@ from basics.task import Task
 from basics.dag import Dag
 from basics.start_conditon import StartCondition
 from cache_type import CacheType
+from client.client import Client
 from convertors.dag_convertor import AirflowDagConverter
 
 
@@ -33,5 +37,13 @@ task2 = PrintTheCatFact(2, "task2", {Exception(): False})
 dag = Dag("dag", StartCondition.DATE, datetime.datetime(2026, 3, 15, 15, 0), CacheType.NONE, {task1:[task2]}, False)
 
 convertor = AirflowDagConverter(dag)
-airflow_dag = convertor.convert()
-print(airflow_dag)
+client = Client()
+airflow_dag = client.convert(convertor=convertor)
+
+"""
+client = Client()
+airflow_dag = client.convert(convertor=convertor)
+deployer = AirflowDeployer(airflow_dag,"https://github.com/DanitSi112/dags.git","/mnt/c/Users/Noago/finalprolect/groot/created_dags")
+client.deploy(deployer=deployer)
+print(airflow_dag())
+"""

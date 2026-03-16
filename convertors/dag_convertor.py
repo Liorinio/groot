@@ -1,9 +1,12 @@
+import os
+import importlib
 from basics.dag import Dag
 from basics.task import Task
 from convertors.convertors import AirflowConvertor
 from airflow.providers.standard.operators.python import PythonOperator
 from convertors.task_convertor import AirflowTaskConvertor
 from airflow.sdk import DAG
+import inspect
 
 
 class AirflowDagConverter(AirflowConvertor):
@@ -95,6 +98,13 @@ class AirflowDagConverter(AirflowConvertor):
         A function that checks if the dag is a validate one
         """
         ...
+
+    def import_classes(self):
+        for task in self.dag.tasks.keys():
+            cls = task.__class__
+            if cls.__module__ is not "__main__":
+                pass
+
 
     def convert(self):
         with DAG(
