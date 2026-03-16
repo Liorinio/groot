@@ -1,10 +1,10 @@
 from datetime import datetime
 
-from basics.dag import Dag
-from basics.start_conditon import StartCondition
-from cache_type import CacheType
-from convertors.convertors import Convertor
-from deployer.deployer import Deployer
+from src.basics import Dag
+from src.basics.start_conditon import StartCondition
+from src.cache_type import CacheType
+from src.convertors import Convertor
+from src.deployer import Deployer
 
 
 class Client:

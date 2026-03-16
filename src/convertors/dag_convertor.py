@@ -1,12 +1,9 @@
-import os
-import importlib
-from basics.dag import Dag
-from basics.task import Task
-from convertors.convertors import AirflowConvertor
+from src.basics import Dag
+from src.basics import Task
+from src.convertors.convertors import AirflowConvertor
 from airflow.providers.standard.operators.python import PythonOperator
-from convertors.task_convertor import AirflowTaskConvertor
+from src.convertors.task_convertor import AirflowTaskConvertor
 from airflow.sdk import DAG
-import inspect
 
 
 class AirflowDagConverter(AirflowConvertor):

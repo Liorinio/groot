@@ -5,12 +5,12 @@ import json
 import datetime
 from typing import Any, Callable
 import requests
-from basics.task import Task
-from basics.dag import Dag
-from basics.start_conditon import StartCondition
-from cache_type import CacheType
-from client.client import Client
-from convertors.dag_convertor import AirflowDagConverter
+from src.basics.task import Task
+from src.basics.dag import Dag
+from src.basics.start_conditon import StartCondition
+from src.cache_type import CacheType
+from src.client.client import Client
+from src.convertors.dag_convertor import AirflowDagConverter
 
 
 class GetCatFact(Task):

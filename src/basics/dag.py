@@ -2,9 +2,9 @@ import uuid
 import logging
 from datetime import datetime
 from typing import Tuple, Optional
-from basics.task import Task
-from basics.start_conditon import StartCondition
-from cache_type import CacheType
+from src.basics.task import Task
+from src.basics.start_conditon import StartCondition
+from src.cache_type import CacheType
 
 logger = logging.getLogger(__name__)
 

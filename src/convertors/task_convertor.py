@@ -1,7 +1,7 @@
-from basics.task import Task
-from convertors.convertors import AirflowConvertor
+from src.basics import Task
+from src.convertors.convertors import AirflowConvertor
 from airflow.providers.standard.operators.python import PythonOperator
-from platforms.s3_handler import validate_s3_path, should_write_s3, read_from_s3, write_to_s3
+from src.platforms import validate_s3_path, should_write_s3, read_from_s3, write_to_s3
 
 
 class AirflowTaskConvertor(AirflowConvertor):

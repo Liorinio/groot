@@ -1,7 +1,7 @@
 import logging
 import pandas as pd
 from typing import Any, Callable
-from basics.task import Task
+from src.basics import Task
 
 logger = logging.getLogger(__name__)
 

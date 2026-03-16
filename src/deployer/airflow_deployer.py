@@ -1,6 +1,6 @@
 import pickle
 from airflow.sdk import DAG
-from deployer.deployer import Deployer
+from src.deployer.deployer import Deployer
 import os
 import shutil
 import subprocess
