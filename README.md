@@ -2,16 +2,19 @@
 
 groot - documentation
 
-groot is a library that is designed for data scientists. The library’s purpose is to wrap all the machine learning pipeline, deploy it and monitor it. It will achieve this goal by wrapping each section of the pipeline, connecting them together after and using different methods in order to deploy it.
+groot is a library that is designed for data scientists. The library’s purpose is to wrap all the machine learning pipeline, deploy it and monitor it.
+It will achieve this goal by wrapping each section of the pipeline, connecting them together after and using different methods in order to deploy it.
 
 Task
 This class is a class that defines a wrapped section of machine learning. This class is abstract, so in order to create a task, you will need to inherit from this class.
 
-The constructor contains a few parameters:
+The class contains a few properties:
 task_id - The id of the task.
 max_retries -  How many retries the task will have.
 name - The name of the task.
 exceptions_retry - A dictionary that contains exceptions and a boolean value which determines if the user wants to check this exception in its code or not.
+is_task_failed -  a boolean variable that states if the task has failed or not.
+The constructor contains the following parameters: task_id, max_retries, name, exceptions_retry
 
 In addition, the class contains two other functions:
 action(user_input: Any | None)
@@ -81,11 +84,11 @@ start_time - The time which the dag should start running.
 tasks - A dictionary which contains a task as the key and list of all the tasks that depend on it as the value.
 cache_type - A cache type from the available cache types of the library
 exit_point_persistent - a boolean which defines if the output of the dag should be saved or not.
-is_task_failed -  a boolean variable that states if the task has failed or not.
 
 Furthermore, the class contains one other functions:
 start_trigger()
-This function defines the start trigger of the entire dag. It returns a tuple which contains the time which the dag should start running and a more specified start condition.
+This function defines the start trigger of the entire dag.
+It returns a tuple which contains the time which the dag should start running and a more specified start condition.
 
 Moreover, you can import from groot.dag the function choice_options() .
 This function allows you to choose the right option for you from the options that the library supports.
@@ -106,7 +109,8 @@ AirflowDagConverter
 This class extends the AirflowConvertor class, and it allows you to convert a Dag to an Airflow’s Dag.
 The constructor of this class receives an instance of Dag.
 
-Additionally, the class contains the function convert() , which allows you to convert a Dag to an Airflow Dag, and the function get_python_task_by_id() which receives an id of a task and returns the requested task.
+Additionally, the class contains the function convert() , which allows you to convert a Dag to an Airflow Dag,
+and the function get_python_task_by_id() which receives an id of a task and returns the requested task.
 
 
 AirflowTaskConverter
@@ -124,10 +128,11 @@ This is an interface which allows you to deploy the Tasks and Dags. It only cont
 AirflowTaskDeployer
 This class implements the interface Convertor,
 
-The constructor receives  a dag file path, a remote repo URL, and a local dags’ directory and initializes the Airflow_Deployer.
+The constructor receives a dag file path, a remote repo URL, and a local dags’ directory and initializes the Airflow_Deployer.
 
-Moreover, it contains the function deploy() , which syncs the dag’s directory with git and copies the dag file into it, so that Airflow's LocalExecutor can detect and run it, and the function push_dag_to_git() , which gets a file path of a DAG file, copies it into the local repo directory, and pushes it to the remote git repository.
-        
+Moreover, it contains the function deploy() , which syncs the dag’s directory with git and copies the dag file into it, so that Airflow's LocalExecutor can detect and run it,
+the function push_dag_to_git() , which gets a file path of a DAG file, copies it into the local repo directory, and pushes it to the remote git repository and the function create_dag_file() , 
+which creates a pickle file and a dag file from the dag object and returns the path to the created dag file.
 
 
 Client
