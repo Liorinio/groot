@@ -2,7 +2,8 @@
 
 groot - documentation
 
-groot is a library that is designed for data scientists. The library’s purpose is to wrap all the machine learning pipeline, deploy it and monitor it. It will achieve this goal by wrapping each section of the pipeline, connecting them together after and using different methods in order to deploy it.
+groot is a library that is designed for data scientists. The library’s purpose is to wrap all the machine learning pipeline, deploy it and monitor it.
+It will achieve this goal by wrapping each section of the pipeline, connecting them together after and using different methods in order to deploy it.
 
 Task
 This class is a class that defines a wrapped section of machine learning. This class is abstract, so in order to create a task, you will need to inherit from this class.
@@ -86,7 +87,8 @@ exit_point_persistent - a boolean which defines if the output of the dag should 
 
 Furthermore, the class contains one other functions:
 start_trigger()
-This function defines the start trigger of the entire dag. It returns a tuple which contains the time which the dag should start running and a more specified start condition.
+This function defines the start trigger of the entire dag.
+It returns a tuple which contains the time which the dag should start running and a more specified start condition.
 
 Moreover, you can import from groot.dag the function choice_options() .
 This function allows you to choose the right option for you from the options that the library supports.
@@ -107,7 +109,8 @@ AirflowDagConverter
 This class extends the AirflowConvertor class, and it allows you to convert a Dag to an Airflow’s Dag.
 The constructor of this class receives an instance of Dag.
 
-Additionally, the class contains the function convert() , which allows you to convert a Dag to an Airflow Dag, and the function get_python_task_by_id() which receives an id of a task and returns the requested task.
+Additionally, the class contains the function convert() , which allows you to convert a Dag to an Airflow Dag,
+and the function get_python_task_by_id() which receives an id of a task and returns the requested task.
 
 
 AirflowTaskConverter
