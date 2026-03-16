@@ -1,9 +1,4 @@
 import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import r2_score
-from sklearn.preprocessing import StandardScaler
 from src.basics.task import Task
 import logging
 from typing import Any, Callable
@@ -11,44 +6,12 @@ from typing import Any, Callable
 logger = logging.getLogger(__name__)
 
 
-class ImportLibrariesTask(Task):
+class CsvLoaderTask(Task):
     def action(self, user_input: Any | None = None):
         try:
             import numpy as np
             import pandas as pd
-            import matplotlib.pyplot as plt
-            import seaborn as sns
-            from sklearn.linear_model import LinearRegression
-            from sklearn.model_selection import train_test_split
-            from sklearn.metrics import r2_score
-            from sklearn.neighbors import KNeighborsRegressor
 
-            libraries = {"pandas": pd, "numpy": np, "LinearRegression": LinearRegression,
-                         "train_test_split": train_test_split,
-                         "StandardScaler": StandardScaler, "r2_score": r2_score,
-                         "KNeighborsRegressor": KNeighborsRegressor}
-
-            logger.info("ML libraries imported successfully")
-
-            self.is_task_failed = False
-            return libraries
-
-        except Exception as e:
-            self.is_task_failed = True
-            raise e
-
-    def on_failure(self) -> Callable:
-        def check_imports():
-            if ImportError in self.exceptions_retry.keys() and self.exceptions_retry[ImportError()]:
-                logger.warning("Failed to import ML libraries. Make sure required packages are installed.")
-                logger.warning("Try installing them with: pip install pandas numpy scikit-learn matplotlib seaborn")
-
-        return check_imports
-
-
-class CsvLoaderTask(Task):
-    def action(self, user_input: Any | None = None):
-        try:
             df = pd.read_csv(user_input)
             logger.info("The dataframe was loaded successfully")
 
@@ -70,6 +33,10 @@ class CsvLoaderTask(Task):
 class ScatterPlotTask(Task):
     def action(self, df: pd.DataFrame | None = None):
         try:
+            import numpy as np
+            import pandas as pd
+            import matplotlib.pyplot as plt
+
             plt.figure(figsize=(10, 5))
             plt.scatter(df['Possession%'], df['Pass%'])
             plt.xlabel('Possession')
@@ -94,6 +61,10 @@ class ScatterPlotTask(Task):
 class SplittingDataTask(Task):
     def action(self, df: pd.DataFrame | None = None):
         try:
+            import numpy as np
+            import pandas as pd
+            from sklearn.model_selection import train_test_split
+
             x_train, x_test, y_train, y_test = train_test_split(df.drop(columns = ['Rating']), df['Rating'], test_size=0.3,random_state=2)
             self.is_task_failed = False
             return x_train, x_test, y_train, y_test
@@ -115,6 +86,9 @@ class SplittingDataTask(Task):
 class TrainingNodelTask(Task):
     def action(self, train_test: tuple | None = None):
         try:
+            from sklearn.preprocessing import StandardScaler
+            from sklearn.linear_model import LinearRegression
+
             x_train = train_test[0]
             x_test = train_test[1]
             y_train = train_test[2]
@@ -137,6 +111,8 @@ class TrainingNodelTask(Task):
 class PredictionTask(Task):
     def action(self, training_results: list | None = None):
         try:
+            from sklearn.metrics import r2_score
+
             predict = r2_score(training_results[3], training_results[-1])
             return predict
 
